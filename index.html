@@ -10,7 +10,17 @@
     <div class = "bg-[url('./Movie.jpg')] h-56 w-full bg-cover bg-center flex items-center">
         <h1 class="text-white text-6xl font-bold pl-16 pb-3">Find your Film</h1>
     </div>
-    <p>Updatingg!</p>
+    <div class="max-w-5xl mx-auto flex items-center justify-center">
+         <div>
+            <div class="-mt-6 bg-gray-100 px-3 py-2 rounded">
+                <input id="movie-name" type="text" placeholder="Find your Film" 
+                    class="w-[40rem] border-none focus:border-none focus:outline-none pl-2 py-2 bg-gray-100"/>
+                <button id="search-button" class="pr-2 text-gray-700">Search</button>
+            </div>
+            <div id="search-movies-display"></div>
+         </div>
+    </div>
+    
     <script src="index.js"></script>
 </body>
 </html>
