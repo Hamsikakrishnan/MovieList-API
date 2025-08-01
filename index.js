@@ -1,7 +1,18 @@
 const movieName = document.getElementById('movie-name')
 const searchBtn = document.getElementById('search-button')
 const searchedMovies = document.getElementById('search-movies-display')
- const defaultPoster = "https://www.reelviews.net/resources/img/default_poster.jpg";
+const defaultPoster = "https://www.reelviews.net/resources/img/default_poster.jpg"; 
+let moviesData = []
+searchedMovies.addEventListener('click', function(e){
+    if(e.target.id){
+        let addedMovies = JSON.parse(localStorage.getItem('addedmovies')) || []
+        let selectedMovie = moviesData.filter(movie =>{
+            return e.target.id === movie.imdbID
+        })
+        addedMovies.push(selectedMovie[0])
+        localStorage.setItem('addedmovies', JSON.stringify(addedMovies))
+    }
+})
 searchBtn.addEventListener('click', async function(){
     const movie = movieName.value
     const res = await fetch(`http://www.omdbapi.com/?apikey=${API_KEY}&s=${movie}`)
@@ -9,7 +20,7 @@ searchBtn.addEventListener('click', async function(){
     console.log(data)
     if(data.Search){
         const movies = data.Search
-        let moviesData = []
+        moviesData = []
         let moviesDataDetails = movies.map(async function(movieName){
                 const res = await fetch(`http://www.omdbapi.com/?apikey=${API_KEY}&i=${movieName.imdbID}`)
                 const data = await res.json()
@@ -34,25 +45,25 @@ function renderMovies(movies){
                          src="${Poster}"
                          onerror="this.onerror=null;this.src='${defaultPoster}'"/>
                     <div class="pl-5 rounded-lg">
-                        <div class="flex items-center pt-1">
+                        <div class="flex items-center ">
                             <h1 class="text-2xl">${movie.Title}&nbsp&nbsp&nbsp&nbsp</h1>
-                            <div class="flex items-center">
+                            <div class="flex items-center text-sm text-gray-700">
                                 <p>⭐</p>
                                 <p>${movie.imdbRating}</p>
                             </div>
                         </div>
-                        <div class="flex items-center">
+                        <div class="flex items-center text-lg text-gray-600">
                             <p>${movie.Runtime} &nbsp&nbsp</p>
                             <p>${movie.Genre} &nbsp&nbsp</p>
-                            <button>Add to Watchlist </button>
+                            <button id=${movie.imdbID} class="text-gray-900 text-sm font-bold">+Add to Watchlist </button>
                         </div>
-                        <div>
-                            <p>${movie.Actors}</p>
+                        <div class="text-sm text-gray-700">
+                            <p>Starring: ${movie.Actors}</p>
                         </div>
-                        <div class="max-w-2xl">
+                        <div class="max-w-2xl text-gray-700 text-sm">
                             <p>${movie.Plot}</p>
                         </div>
-                        <div>
+                        <div class="font-light text-gray-600 text-sm">
                             <p>${movie.Country}</p>
                         </div>
                     </div>
