@@ -3,7 +3,7 @@ const searchBtn = document.getElementById('search-button')
 const searchedMovies = document.getElementById('search-movies-display')
 searchBtn.addEventListener('click', async function(){
     const movie = movieName.value
-    const res = await fetch(`http://www.omdbapi.com/?&s=${movie}`)
+    const res = await fetch(`http://www.omdbapi.com/?i=${API_ID}&apikey=${API_KEY}&s=${movie}`)
     const data = await res.json()
     // const movies = [{
     //     Poster: "https://m.media-amazon.com/images/M/MV5BMTkxNTk5OTg1MV5BMl5BanBnXkFtZTcwNTk5MzM0MQ@@._V1_SX300.jpg",
