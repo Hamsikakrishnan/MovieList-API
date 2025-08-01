@@ -1,6 +1,7 @@
 const movieName = document.getElementById('movie-name')
 const searchBtn = document.getElementById('search-button')
 const searchedMovies = document.getElementById('search-movies-display')
+ const defaultPoster = "https://www.reelviews.net/resources/img/default_poster.jpg";
 searchBtn.addEventListener('click', async function(){
     const movie = movieName.value
     const res = await fetch(`http://www.omdbapi.com/?apikey=${API_KEY}&s=${movie}`)
@@ -8,12 +9,14 @@ searchBtn.addEventListener('click', async function(){
     console.log(data)
     if(data.Search){
         const movies = data.Search
-        const moviesData = []
-        movies.forEach(async function(movieName){
+        let moviesData = []
+        let moviesDataDetails = movies.map(async function(movieName){
                 const res = await fetch(`http://www.omdbapi.com/?apikey=${API_KEY}&i=${movieName.imdbID}`)
                 const data = await res.json()
-                moviesData.push(data)
+                return data
         })
+        moviesData = await Promise.all(moviesDataDetails)
+        console.log(moviesData) 
         render(moviesData)
     }
     else{
@@ -24,8 +27,40 @@ searchBtn.addEventListener('click', async function(){
 function renderMovies(movies){
     let html = ``
     movies.forEach(movie =>{
-        html += ``
+        let Poster = (movie.Poster && movie.Poster !== "N/A") ? movie.Poster : defaultPoster
+                html += `<div class="pl-5">
+                <div class="flex rounded items-center max-w-2xl pb-5">    
+                    <img class="h-40 rounded"
+                         src="${Poster}"
+                         onerror="this.onerror=null;this.src='${defaultPoster}'"/>
+                    <div class="pl-5 rounded-lg">
+                        <div class="flex items-center pt-1">
+                            <h1 class="text-2xl">${movie.Title}&nbsp&nbsp&nbsp&nbsp</h1>
+                            <div class="flex items-center">
+                                <p>⭐</p>
+                                <p>${movie.imdbRating}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <p>${movie.Runtime} &nbsp&nbsp</p>
+                            <p>${movie.Genre} &nbsp&nbsp</p>
+                            <button>Add to Watchlist </button>
+                        </div>
+                        <div>
+                            <p>${movie.Actors}</p>
+                        </div>
+                        <div class="max-w-2xl">
+                            <p>${movie.Plot}</p>
+                        </div>
+                        <div>
+                            <p>${movie.Country}</p>
+                        </div>
+                    </div>
+         </div>
+         </div>
+        `
     })
+    return html
 }
 function render(movies){
     searchedMovies.innerHTML = renderMovies(movies)
